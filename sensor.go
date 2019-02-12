@@ -1,4 +1,4 @@
-package go_laser_dust
+package sds011
 
 import (
 	"bytes"

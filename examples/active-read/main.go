@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/makers-bierzo/sds011"
 	"github.com/tarm/serial"
-	"github.com/tokkenno/go-laser-dust"
 	"log"
 	"time"
 )
@@ -15,13 +15,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	sensor := go_laser_dust.NewSensor(s)
+	sensor := sds011.NewSensor(s)
 
 	_ = sensor.Sleep(false)
 	_ = sensor.SetWorkingPeriod(1)
-	_ = sensor.SetMode(go_laser_dust.ActiveMode)
+	_ = sensor.SetMode(sds011.ActiveMode)
 
-	measureChannel := make(chan go_laser_dust.Measurement)
+	measureChannel := make(chan sds011.Measurement)
 	sensor.OnQuery(measureChannel)
 
 	sensor.Listen()

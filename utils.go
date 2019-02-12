@@ -1,4 +1,4 @@
-package go_laser_dust
+package sds011
 
 import "encoding/binary"
 
@@ -13,6 +13,6 @@ func sum(input []byte) byte {
 
 func parseId(id uint16) []byte {
 	idBuffer := make([]byte, 2)
-	binary.LittleEndian.PutUint16(idBuffer, uint16(0xffff))
+	binary.LittleEndian.PutUint16(idBuffer, id)
 	return idBuffer
 }
