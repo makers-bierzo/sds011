@@ -93,7 +93,8 @@ func (sensor *sensor) Sleep(sleep bool) error {
 		return err
 	}
 
-	if sensor.read()[1] == byte(SleepCommand) {
+	response := sensor.read()
+	if len(response) > 1 && response[1] == byte(SleepCommand) {
 		return nil
 	} else {
 		return errors.New("sleep bad response")
@@ -106,7 +107,8 @@ func (sensor *sensor) SetMode(mode Mode) error {
 		return err
 	}
 
-	if sensor.read()[1] == byte(ModeCommand) {
+	response := sensor.read()
+	if len(response) > 0 && response[1] == byte(ModeCommand) {
 		return nil
 	} else {
 		return errors.New("set mode bad response")
@@ -116,7 +118,7 @@ func (sensor *sensor) SetMode(mode Mode) error {
 func (sensor *sensor) queryResponse() (*Measurement, error) {
 	response := sensor.read()
 
-	if response[0] == byte(0xc0) {
+	if len(response) > 5 && response[0] == byte(0xc0) {
 		measure := Measurement{
 			PM2_5: float32(binary.LittleEndian.Uint16(response[1:3])) / 10.0,
 			PM10:  float32(binary.LittleEndian.Uint16(response[3:5])) / 10.0,
@@ -151,7 +153,7 @@ func (sensor *sensor) GetFirmwareVersion() (time.Time, error) {
 
 	response := sensor.read()
 
-	if response[1] == byte(FirmwareCommand) {
+	if len(response) > 4 && response[1] == byte(FirmwareCommand) {
 		sensor.firmware = time.Date(2000+int(response[2]), time.Month(response[3]), int(response[4]), 0, 0, 0, 0, time.UTC)
 		return sensor.firmware, nil
 	} else {
@@ -170,7 +172,8 @@ func (sensor *sensor) SetWorkingPeriod(minutes uint) error {
 		return err
 	}
 
-	if sensor.read()[1] == byte(WorkingPeriodCommand) {
+	response := sensor.read()
+	if len(response) > 1 &&  response[1] == byte(WorkingPeriodCommand) {
 		return nil
 	} else {
 		return errors.New("set working period bad response")
@@ -183,7 +186,8 @@ func (sensor *sensor) SetId(id uint16) error {
 		return err
 	}
 
-	if sensor.read()[1] == byte(DeviceIdCommand) {
+	response := sensor.read()
+	if len(response) > 1 && response[1] == byte(DeviceIdCommand) {
 		sensor.id = id
 		return nil
 	} else {
